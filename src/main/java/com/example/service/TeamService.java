@@ -24,6 +24,10 @@ public class TeamService {
         return teamDao.getAllTeams();
     }
 
+    public List<Team> getTeamsByCreator(int creatorUserId) {
+        return teamDao.getTeamsByCreator(creatorUserId);
+    }
+
     public Team getTeamById(int id) {
         return teamDao.getTeamById(id);
     }

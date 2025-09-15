@@ -5,7 +5,6 @@ import com.example.dao.UserDao;
 import com.example.model.Role;
 import com.example.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +19,6 @@ public class AuthController {
     @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @GetMapping("/login")
     public String showLoginPage() {
         return "login"; // Return login.html
@@ -36,8 +32,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String processSignup(@ModelAttribute User user, @RequestParam("role") String role, RedirectAttributes redirectAttributes) {
-        // IMPORTANT: Hash the password before saving it to the database
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Store plain password as-is (NOT SECURE)
+        user.setPassword(user.getPassword());
         user.setRole(Role.valueOf(role));
 
         userDao.save(user);

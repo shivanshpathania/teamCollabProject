@@ -1,7 +1,6 @@
 package com.example.dao;
 
 import com.example.model.Team;
-import com.example.model.TeamMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,12 +21,14 @@ public class TeamDaoImpl implements TeamDao {
 
     @Override
     public int saveTeam(Team team) {
-        String sql = "INSERT INTO teams (subject, group_number) VALUES (?, ?)";
+        String sql = "INSERT INTO teams (subject, group_number, progress, creator_user_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, team.getSubject());
             ps.setInt(2, team.getGroupNumber());
+            ps.setInt(3, team.getProgress());
+            ps.setInt(4, team.getCreatorUserId());
             return ps;
         }, keyHolder);
         int teamId = keyHolder.getKey().intValue();
@@ -43,6 +44,8 @@ public class TeamDaoImpl implements TeamDao {
             t.setId(rs.getInt("id"));
             t.setSubject(rs.getString("subject"));
             t.setGroupNumber(rs.getInt("group_number"));
+            t.setProgress(rs.getInt("progress"));
+            t.setCreatorUserId(rs.getInt("creator_user_id"));
             return t;
         });
         team.setMembers(teamMemberDao.getMembersByTeamId(id));
@@ -57,6 +60,8 @@ public class TeamDaoImpl implements TeamDao {
             t.setId(rs.getInt("id"));
             t.setSubject(rs.getString("subject"));
             t.setGroupNumber(rs.getInt("group_number"));
+            t.setProgress(rs.getInt("progress"));
+            t.setCreatorUserId(rs.getInt("creator_user_id"));
             return t;
         });
         for (Team team : teams) {
@@ -73,14 +78,30 @@ public class TeamDaoImpl implements TeamDao {
             t.setId(rs.getInt("id"));
             t.setSubject(rs.getString("subject"));
             t.setGroupNumber(rs.getInt("group_number"));
+            t.setProgress(rs.getInt("progress"));
+            t.setCreatorUserId(rs.getInt("creator_user_id"));
+            return t;
+        });
+    }
+
+    @Override
+    public List<Team> getTeamsByCreator(int creatorUserId) {
+        String sql = "SELECT * FROM teams WHERE creator_user_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{creatorUserId}, (rs, rowNum) -> {
+            Team t = new Team();
+            t.setId(rs.getInt("id"));
+            t.setSubject(rs.getString("subject"));
+            t.setGroupNumber(rs.getInt("group_number"));
+            t.setProgress(rs.getInt("progress"));
+            t.setCreatorUserId(rs.getInt("creator_user_id"));
             return t;
         });
     }
 
     @Override
     public void updateTeam(int id, Team team) {
-        String sql = "UPDATE teams SET subject=?, group_number=? WHERE id=?";
-        jdbcTemplate.update(sql, team.getSubject(), team.getGroupNumber(), id);
+        String sql = "UPDATE teams SET subject=?, group_number=?, progress=? WHERE id=?";
+        jdbcTemplate.update(sql, team.getSubject(), team.getGroupNumber(), team.getProgress(), id);
         teamMemberDao.updateTeamMembers(team.getMembers(), id);
     }
 

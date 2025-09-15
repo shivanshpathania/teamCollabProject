@@ -12,4 +12,7 @@ public interface TeamDao {
     List<Team> getAllTeams();
     void updateTeam(int id, Team team);
     void deleteTeam(int id);
+
+    // Ownership helper
+    List<Team> getTeamsByCreator(int creatorUserId);
 }

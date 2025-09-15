@@ -15,6 +15,7 @@
         .team-list { margin-top: 24px; }
         .btn { background: #1976d2; color: #fff; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; font-size: 16px; }
         .btn:hover { background: #125ea2; }
+        .actions a { margin-right: 12px; color: #1976d2; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -46,6 +47,7 @@
             <div th:each="team : ${teams}" class="card">
                 <h3 th:text="${team.subject}"></h3>
                 <p><b>Group:</b> <span th:text="${team.groupNumber}"></span></p>
+                <p><b>Progress:</b> <span th:text="${team.progress}"></span>%</p>
                 <div>
                     <b>Members:</b>
                     <ul>
@@ -53,6 +55,10 @@
                             <span th:text="${m.name}"></span> (<span th:text="${m.rollNumber}"></span>) - <span th:text="${m.email}"></span>
                         </li>
                     </ul>
+                </div>
+                <div class="actions">
+                    <a th:href="@{'/mentor/updateTeam/' + ${team.id}}">Update</a>
+                    <a th:href="@{'/mentor/deleteTeam/' + ${team.id}}" onclick="return confirm('Are you sure you want to delete this team?')">Delete</a>
                 </div>
             </div>
         </div>

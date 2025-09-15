@@ -61,6 +61,10 @@
                 </th:block>
             </select>
         </div>
+        <div class="form-group">
+            <label>Progress (%)</label>
+            <input type="number" name="progress" min="0" max="100" value="0" required>
+        </div>
         <div class="form-group team-members" id="team-members">
             <div class="team-member">
                 <input name="members[0].name" placeholder="Name" required>
@@ -76,6 +80,7 @@
         <div th:each="team : ${teams}" class="card">
             <h3 th:text="${team.subject}"></h3>
             <p><b>Group:</b> <span th:text="${team.groupNumber}"></span></p>
+            <p><b>Progress:</b> <span th:text="${team.progress}"></span>%</p>
 
             <div>
                 <b>Members:</b>
@@ -85,7 +90,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="actions">
+            <div class="actions" th:if="${currentUserId} == ${team.creatorUserId}">
                 <a th:href="@{'/student/updateTeam/' + ${team.id}}">Update</a>
                 <a th:href="@{'/student/deleteTeam/' + ${team.id}}"
                    onclick="return confirm('Are you sure you want to delete this team?')">Delete</a>

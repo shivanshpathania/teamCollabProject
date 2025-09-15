@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS announcements (
 CREATE TABLE IF NOT EXISTS teams (
     id INT AUTO_INCREMENT PRIMARY KEY,
     subject VARCHAR(255) NOT NULL,
-    group_number INT NOT NULL
+    group_number INT NOT NULL,
+    progress INT NOT NULL DEFAULT 0,
+    creator_user_id INT NOT NULL
 );
 
 -- Team Members table
